@@ -40,7 +40,7 @@
    > npm run package
    ```
 
-   - If you want to change the target platform (Linux, for example), please change it at `package.json`: `--platform=linux"`
+   - If you want to change the target platform (Linux, for example), please change it at `package.json`: `--platform=linux`
 
 ## 3 Using
 

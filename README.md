@@ -55,7 +55,7 @@
 
 3. The <kbd>tab</kbd> used in the text editor will be automatically changed into a SBC space (Unicode+12288).
 
-### 4 Development Information
+## 4 Development Information
 
 1. License: MIT
 

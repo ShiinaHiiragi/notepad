@@ -4,7 +4,8 @@
   "description": "Learning Peoject.",
   "main": "index.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "package": "electron-packager . Notepad --electron-version=11.2.0 --icon='src/icon.ico' --platform=win32"
   },
   "keywords": [
     "trash"

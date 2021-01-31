@@ -1,0 +1,231 @@
+<!DOCTYPE HTML>
+
+<html>
+  <head>
+    <title>Notepad - Untitled</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Dependency Include Here -->
+    <link href="./semantic/dist/semantic.min.css" rel="stylesheet" type="text/css">
+    <script src="./semantic/dist/semantic.min.js"></script>
+    <script src="./node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="./src/md5.js"></script>
+
+    <!-- Customized Resources -->
+    <style type="text/css">
+    #calrow
+    {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      height: 4%;
+      background: rgba(245, 245, 245);
+      position: absolute;
+      bottom: 0;
+    }
+
+    #realfind
+    {
+      margin-left: 2%;
+      font-size: 2.2vh;
+      user-select: none;
+    }
+
+    #wind
+    {
+      height: 96%;
+      width: 100%;
+    }
+    </style>
+  </head>
+  <body style="overflow-y: hidden">
+    <iframe id="wind" src="text.html" frameborder="0"></iframe>
+    <div id="calrow">
+      <p id="realfind"> Words Count: 0 </p>
+    </div>
+    <script>
+      const fs = require('fs');
+      const ipcRenderer = require('electron').ipcRenderer;
+      const remote = require('electron').remote;
+      const dialog = remote.dialog;
+      const BrowserWindow = remote.BrowserWindow;
+      var getText = "";
+      var autoPath = "./backup/" + hex_md5(new Date().toISOString()) + ".txt";
+      self.setInterval("autoSave()", 30000);
+
+      function autoSave()
+      {
+        if (document.getElementById("wind").contentWindow.localStorage.getItem("needSave") == "1")
+        {
+          if (!fs.existsSync("./backup")) fs.mkdirSync("./backup");
+          fs.writeFileSync(autoPath,
+            document.getElementById("wind").contentWindow.document.body.innerText);
+        }
+      }
+
+      function saveFile(callback)
+      {
+        var filePath = document.getElementById("wind").contentWindow.localStorage.getItem("savePath");
+        if (filePath == "")
+        {
+          var options = {title: "Save File", buttonLabel: "Select", defaultPath: "."};
+          options.properties = ["openFile", "promptToCreate"];
+          options.filters =
+          [
+            {name: "Text", extensions: ["txt"]},
+            {name: "All", extensions: ["*"]}
+          ]
+          dialog.showOpenDialog(options).then(result =>
+          {
+            filePath = result.filePaths[0];
+            if (filePath)
+            {
+              fs.writeFileSync(filePath,
+                document.getElementById("wind").contentWindow.document.body.innerText);
+              document.getElementById("wind").contentWindow.localStorage.setItem("needSave", "0");
+              document.getElementById("wind").contentWindow.localStorage.setItem("savePath", filePath);
+              document.getElementsByTagName('title')[0].innerHTML = "NotePad - " + filePath;
+            }
+          }).then(() => { if (typeof callback == 'function') callback(); })
+        }
+        else
+        {
+          fs.writeFileSync(filePath,
+            document.getElementById("wind").contentWindow.document.body.innerText);
+          document.getElementById("wind").contentWindow.localStorage.setItem("needSave", "0");
+          document.getElementsByTagName('title')[0].innerHTML = "NotePad - " + filePath;
+          if (typeof callback == 'function') callback();
+        }
+      }
+
+      function saveFileAs()
+      {
+        var filePath = document.getElementById("wind").contentWindow.localStorage.getItem("savePath");
+        var options = {title: "Save As", buttonLabel: "Select", defaultPath: "."};
+        options.properties = ["openFile", "promptToCreate"];
+        options.filters =
+        [
+          {name: "Text", extensions: ["txt"]},
+          {name: "All", extensions: ["*"]}
+        ]
+        dialog.showOpenDialog(options).then(result =>
+        {
+          filePath = result.filePaths[0];
+          if (filePath)
+          {
+            fs.writeFileSync(filePath,
+              document.getElementById("wind").contentWindow.document.body.innerText);
+            document.getElementById("wind").contentWindow.localStorage.setItem("needSave", "0");
+            document.getElementById("wind").contentWindow.localStorage.setItem("savePath", filePath);
+            document.getElementsByTagName('title')[0].innerHTML = "NotePad - " + filePath;
+          }
+        })
+      }
+
+      function newFile()
+      {
+        document.getElementById("wind").contentWindow.document.body.innerText = "";
+        document.getElementById("wind").contentWindow.localStorage.setItem("needSave", "-1");
+        document.getElementById("wind").contentWindow.localStorage.setItem("savePath", "");
+        document.getElementsByTagName('title')[0].innerHTML = "NotePad - Untitled";
+        document.getElementById('realfind').innerText = "Words Count: 0";
+        getText = "";
+        window.parent.autoPath = "./backup/" + hex_md5(new Date().toISOString()) + ".txt";
+      }
+
+      function openFile()
+      {
+        var options = {title: "Open File", buttonLabel: "Select", defaultPath: "."};
+        options.properties = ["openFile"];
+        options.filters =
+        [
+          {name: "Text", extensions: ["txt"]},
+          {name: "All", extensions: ["*"]}
+        ]
+        dialog.showOpenDialog(options).then(result =>
+        {
+          var filePath = result.filePaths[0];
+          if (filePath)
+          {
+            getText = fs.readFileSync(filePath);
+            document.getElementById("wind").contentWindow.document.body.innerText = String(getText);
+            document.getElementById('realfind').innerText =
+              "Words Count: " + String(getText.length);
+            document.getElementById("wind").contentWindow.localStorage.setItem("needSave", "-1");
+            document.getElementById("wind").contentWindow.localStorage.setItem("savePath", filePath);
+            document.getElementsByTagName('title')[0].innerHTML = "NotePad - " + filePath;
+            window.parent.autoPath = "./backup/" + hex_md5(new Date().toISOString()) + ".txt";
+          }
+        })
+      }
+
+      ipcRenderer.on('saveFile', function(event, action) { saveFile(); })
+      ipcRenderer.on('saveFileAs', function(event, action) { saveFileAs(); })
+      ipcRenderer.on('tabPressed', function(event, action)
+      {
+        var sel = document.getElementById("wind").contentWindow.getSelection();
+        sel.deleteFromDocument();
+        var range = sel.getRangeAt(0);
+        var tabNode = document.getElementById("wind").contentWindow.document.createTextNode('　');
+        range.insertNode(tabNode);
+        range.setStartAfter(tabNode);
+        range.setEndAfter(tabNode);
+        sel.removeAllRanges();
+        sel.addRange(range);
+        console.log(sel);
+      })
+      ipcRenderer.on('newFile', function(event, action)
+      {
+        if (document.getElementById("wind").contentWindow.localStorage.getItem("needSave") == "1")
+        {
+          var options = {title: "Warning", type: "warning", cancelId: 1};
+          options.buttons = ["Yes", "Cancel"];
+          options.message = "Do you want to save your changes to this file?";
+          dialog.showMessageBox(options).then(result =>
+          {
+            if (!result.response) saveFile(newFile);
+            else newFile();
+          })
+        }
+        else newFile();
+      })
+      ipcRenderer.on('openFile', function(event, action)
+      {
+        if (document.getElementById("wind").contentWindow.localStorage.getItem("needSave") == "1")
+        {
+          var options = {title: "Warning", type: "warning", cancelId: 1};
+          options.buttons = ["Yes", "Cancel"];
+          options.message = "Do you want to save your changes to this file?";
+          dialog.showMessageBox(options).then(result =>
+          {
+            if (!result.response) saveFile(openFile);
+            else openFile();
+          })
+        }
+        else openFile();
+      })
+      ipcRenderer.on('toClose', function(event, action)
+      {
+        if (document.getElementById("wind").contentWindow.localStorage.getItem("needSave") == "1")
+        {
+          var options = {title: "Warning", type: "warning", cancelId: 2};
+          options.buttons = ["Yes", "No", "Cancel"];
+          options.message = "Do you want to save your changes before closing the notepad?";
+          dialog.showMessageBox(options).then(result =>
+          {
+            if (!result.response) saveFile(remote.app.exit);
+            else if (result.response == 1) remote.app.exit();
+          })
+        }
+        else remote.app.exit();
+      })
+      ipcRenderer.on('about', function(event, action)
+      {
+        fontSub = new BrowserWindow({width: 800, height: 600, frame: false});
+        fontSub.loadFile('about.html');
+        fontSub.on('close', () => { fontSub = null });
+      })
+    </script>
+  </body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE HTML>
+
+<html>
+  <head>
+    <title> Example </title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Semantic Include Here -->
+    <link href="./semantic/dist/semantic.min.css" rel="stylesheet" type="text/css">
+    <script src="./semantic/dist/semantic.min.js"></script>
+    <script src="./node_modules/jquery/dist/jquery.min.js"></script>
+    
+    <!-- Customized Resources -->
+    <style type="text/css">
+    body
+    {
+      padding-top: 2%;
+      padding-left: 5%;
+      padding-right: 5%;
+      font-size: 1.2em;
+      -webkit-user-modify: read-write-plaintext-only;
+    }
+    </style>
+    <script>
+      document.addEventListener('keydown', keyboardEvent);
+      document.addEventListener('keyup', keyboardEvent);
+      window.localStorage.setItem('needSave', '0');
+      window.localStorage.setItem('savePath', '');
+      var mainText = '';
+      function keyboardEvent()
+      {
+        if (mainText != document.body.innerText)
+          if (window.localStorage.getItem('needSave') == '-1' &&
+              document.body.innerText == window.parent.getText)
+            window.localStorage.setItem('needSave', '0');
+          else
+          {
+            window.localStorage.setItem('needSave', '1');
+            if (window.parent.document.getElementsByTagName('title')[0].innerHTML.substr(-1) != ")")
+              window.parent.document.getElementsByTagName('title')[0].innerHTML += " (unsaved)";
+          }
+        mainText = document.body.innerText;
+        window.parent.document.getElementById('realfind').innerText =
+          "Words Count: " + String(mainText.length);
+      }
+    </script>
+  </head>
+  <body onLoad="document.body.innerText=''; document.body.focus();" contenteditable="plaintext-only" spellcheck="false" id="textarea"></body>
+</html>

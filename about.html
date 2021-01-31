@@ -1,0 +1,104 @@
+<!DOCTYPE HTML>
+
+<html>
+  <head>
+    <title> About </title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Semantic Include Here -->
+    <link href="./semantic/dist/semantic.min.css" rel="stylesheet" type="text/css">
+    <script src="./semantic/dist/semantic.min.js"></script>
+    <script src="./node_modules/jquery/dist/jquery.min.js"></script>
+
+    <script>
+      var one = true;
+      function changeOccurrence()
+      {
+        if (one)
+        {
+          one = false;
+          document.getElementById("one").style.display = "none";
+          document.getElementById("two").style.display = "block";
+          document.getElementById("zero").innerText = "The MIT License (MIT)";
+          document.getElementById("showButton").innerText = "Show Infomation";
+        }
+        else
+        {
+          one = true;
+          document.getElementById("one").style.display = "block";
+          document.getElementById("two").style.display = "none";
+          document.getElementById("zero").innerText = "About";
+          document.getElementById("showButton").innerText = "Show License";
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <div class="ui grid" style="padding-top: 8%;">
+      <div class="centered row">
+        <div class="ten wide column">
+          <h2 class="ui dividing header" id="zero"> About </h2>
+        </div>
+      </div>
+
+      <div class="centered row" id="one">
+        <div class="ten wide column" style="padding-top: 4%;">
+          <table class="ui celled table">
+            <thead>
+              <tr><th>Types</th>
+              <th>Acceptance</th>
+            </tr></thead>
+            <tbody>
+              <tr>
+                <td data-label="Name">Basic Infomation</td>
+                <td data-label="Age">
+                  Version: 0.0.1
+                  <br/>Author: Ichinoe
+                  <br/>License: MIT
+                  <br/>Date: 2021 01/21
+                </td>
+              </tr>
+              <tr>
+                <td data-label="Name">Dependencies</td>
+                <td data-label="Age">
+                  Node.js: 14.15.4
+                  <br/>Electron: 11.1.0
+                  <br/>Semantic-UI: 2.4.2
+                  <br/>Chromium: 87.0.4280.88
+                  <br/>jQuery: 3.5.1
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="row" id="two" style="display: none;">
+        <div class="three wide column"></div>
+        <div class="ten wide column">
+          <p>Copyright &copy; 2021 &lt;copyright holders&gt; </p>
+          <p>
+            Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+          </p>
+          <p>
+            The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+          </p>
+          <p>
+            THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+          </p>
+        </div>
+        <div class="three wide column"></div>
+      </div>
+
+      <div class="centered row" style="position: fixed; top: 84%">
+        <div class="six wide center aligned column" >
+          <div class="fluid ui buttons">
+            <button class="ui button" onclick="changeOccurrence()" id="showButton">Show License</button>
+            <button class="ui button" onclick="window.close()">Exit</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

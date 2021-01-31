@@ -1,0 +1,19 @@
+{
+  "name": "notepad--",
+  "version": "1.0.0",
+  "description": "Learning Peoject.",
+  "main": "index.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "keywords": [
+    "trash"
+  ],
+  "author": "Shiina Hiiragi",
+  "license": "MIT",
+  "dependencies": {
+    "electron": "^11.2.0",
+    "jquery": "^3.5.1",
+    "semantic-ui": "^2.4.2"
+  }
+}

@@ -1,7 +1,7 @@
 {
   "name": "notepad--",
   "version": "1.0.0",
-  "description": "Learning Peoject.",
+  "description": "Learning Project.",
   "main": "index.js",
   "scripts": {
     "start": "electron .",
@@ -10,7 +10,7 @@
   "keywords": [
     "trash"
   ],
-  "author": "Shiina Hiiragi",
+  "author": "Ichinoe",
   "license": "MIT",
   "dependencies": {
     "electron": "^11.2.0",

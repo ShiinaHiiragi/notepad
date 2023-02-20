@@ -1,4 +1,4 @@
-# Notepad--
+# Notepad
 
 <p align="right">
   Author: Ichinoe <br/>
